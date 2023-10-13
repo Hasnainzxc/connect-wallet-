@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   useMetamask,
   useWalletConnect,
@@ -42,8 +43,28 @@ export const ConnectWallet = () => {
     flexDirection: 'column',
   };
 
-  // If a wallet is connected, show address, chainId and disconnect button
-  if (address) {
+  // State to determine if it's a mobile view
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    // Check if it's a mobile view when the component mounts
+    setIsMobileView(window.innerWidth < 768); // You can adjust the breakpoint as needed
+
+    // Update the `isMobileView` state when the window is resized
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Rest of your component code remains the same
+  if (address || !isMobileView) {
     return (
       <div style={responsiveStyle}>
         <div style={connectedStyle}>
@@ -59,7 +80,6 @@ export const ConnectWallet = () => {
     );
   }
 
-  // If no wallet is connected, show connect wallet options
   return (
     <div style={responsiveStyle}>
       <button style={{ ...buttonStyle, backgroundColor: 'blue', color: 'white' }} onClick={() => connectWithCoinbaseWallet()}>

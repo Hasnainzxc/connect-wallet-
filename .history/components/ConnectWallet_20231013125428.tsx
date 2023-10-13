@@ -42,8 +42,11 @@ export const ConnectWallet = () => {
     flexDirection: 'column',
   };
 
-  // If a wallet is connected, show address, chainId and disconnect button
-  if (address) {
+  // Use media query to determine screen width and apply different styles
+  const isMobileView = window.innerWidth < 768; // You can adjust the breakpoint as needed
+
+  // If a wallet is connected or it's not a mobile view, show address, chainId, and disconnect button
+  if (address || !isMobileView) {
     return (
       <div style={responsiveStyle}>
         <div style={connectedStyle}>
@@ -59,7 +62,7 @@ export const ConnectWallet = () => {
     );
   }
 
-  // If no wallet is connected, show connect wallet options
+  // If no wallet is connected, and it's a mobile view, show connect wallet options
   return (
     <div style={responsiveStyle}>
       <button style={{ ...buttonStyle, backgroundColor: 'blue', color: 'white' }} onClick={() => connectWithCoinbaseWallet()}>
